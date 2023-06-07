@@ -11,8 +11,6 @@ import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 
 import {IOffscript2023} from "./IOffscript2023.sol";
 
-import "hardhat/console.sol";
-
 contract Offscript2023 is ERC721, Ownable, IOffscript2023 {
     //
     // Events
@@ -28,6 +26,51 @@ contract Offscript2023 is ERC721, Ownable, IOffscript2023 {
     // solhint-disable-next-line max-line-length
         "Offscript Crowdseed NFT. Owned by early supporters of Offscript - An offsite for creatives in Web3. Owners of this NFT, get a discount during ticket sale";
     string public constant externalUrl = "https://offscript.web3creatives.com/";
+
+    string[] publicNames = [
+        "Bearberry",
+        "Bean",
+        "California bay",
+        "Bay laurel",
+        "Bay",
+        "Baobab",
+        "Banana",
+        "Bamboo",
+        "Carolina azolla",
+        "Azolla",
+        "Water ash",
+        "White ash",
+        "Swamp ash",
+        "River ash",
+        "Red ash",
+        "Maple ash",
+        "Green ash",
+        "Cane ash",
+        "Blue ash",
+        "Black ash",
+        "Ash",
+        "Indian arrowwood",
+        "Arrowwood",
+        "Arizona sycamore",
+        "Arfaj",
+        "Apricot",
+        "Apple of Sodom",
+        "Apple",
+        "Amy root",
+        "Tall ambrosia",
+        "Almond",
+        "White alder",
+        "Striped alder",
+        "Alnus incana",
+        "Speckled alder",
+        "Gray alder",
+        "False alder",
+        "Common alder",
+        "Black alder",
+        "Alder"
+    ];
+
+    address[] public whitelist;
 
     //
     // State
@@ -90,7 +133,7 @@ contract Offscript2023 is ERC721, Ownable, IOffscript2023 {
     function getMetadata(uint256 tokenId)
         external
         view
-        override(IOffscriptNFT)
+        override(IOffscript2023)
         returns (uint8 discount, string memory name)
     {
         Metadata memory meta = metadata[tokenId];
@@ -211,11 +254,11 @@ contract Offscript2023 is ERC721, Ownable, IOffscript2023 {
         return baseURI;
     }
 
-    //Override functions
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal override(ERC721) {
-        super._beforeTokenTransfer(from, to, amount);
-    }
+    //
+    // IERC165
+    //
 
+    /// @inheritdoc IERC165
     function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, IERC165) returns (bool) {
         return super.supportsInterface(interfaceId);
     }
