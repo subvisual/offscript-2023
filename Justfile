@@ -38,7 +38,6 @@ test:
 
 # 1. build contracts
 # 2. run test suite
-# 3. re-gen wagmi asynchronously
 # 4. wait a bit for anvil to boot, then run deploy script asynchronously
 eth:
   #!/bin/bash
@@ -46,7 +45,6 @@ eth:
   just build-contracts
   just test
   sleep 1 && just eth-deploy &
-  just wagmi &
   anvil --host 0.0.0.0 --silent
 
 build-contracts:
@@ -55,10 +53,6 @@ build-contracts:
 # start next.js dev server
 web:
   yarn dev
-
-# generate wagmi
-wagmi:
-  yarn run wagmi generate
 
 # restart `just eth` when contracts change
 eth-watch:

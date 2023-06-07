@@ -1,12 +1,18 @@
-import { Web3 } from "@/components";
-import "@rainbow-me/rainbowkit/styles.css";
+import { Web3ReactProvider } from "@web3-react/core";
 import type { AppProps } from "next/app";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ExternalProvider, Web3Provider } from "@ethersproject/providers";
 
 const queryClient = new QueryClient();
 
-export default function App({ Component, pageProps }: AppProps) {
+function getLibrary(provider: ExternalProvider): Web3Provider {
+  const library = new Web3Provider(provider);
+  library.pollingInterval = 12000;
+  return library;
+}
+
+export default function App({ Component }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <Head>
@@ -15,9 +21,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <main>
-        <Web3>
+        <Web3ReactProvider getLibrary={getLibrary}>
           <Component />
-        </Web3>
+        </Web3ReactProvider>
       </main>
     </QueryClientProvider>
   );
