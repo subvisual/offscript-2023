@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
+import "forge-std/console.sol";
 import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
 import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -9,8 +10,6 @@ import {IERC721} from "lib/openzeppelin-contracts/contracts/token/ERC721/IERC721
 
 import {AggregatorV3Interface} from "lib/chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-// TODO: still needed?
-// import {IOffscript2023} from "./IOffscript2023.sol";
 import "./errors.sol";
 
 contract OffscriptPayment is Ownable {
@@ -24,7 +23,7 @@ contract OffscriptPayment is Ownable {
     //
     struct PaymentTokenParams {
         address token;
-        AggregatorV3Interface oracle;
+        address oracle;
     }
 
     //
@@ -45,20 +44,23 @@ contract OffscriptPayment is Ownable {
     // IOffscript2023 public nft;
 
     // base ticket price, in USD
-    uint16 public basePrice;
-    uint16 public extendedPrice;
+    uint16 public immutable basePrice;
+
+    // extended ticket price, in USD
+    uint16 public immutable extendedPrice;
 
     //Ticket Supply
     uint16 public supply;
     uint16 public sold;
 
     /// Discount percentage (1% == 100)
-    uint16 discountPct;
+    uint16 public immutable discountPct;
 
     /// tokens and price oracles
     mapping(address => AggregatorV3Interface) public oracles;
 
-    mapping(uint256 => bool) public used;
+    /// whitelisted addresses
+    mapping(address => bool) public whitelist;
 
     constructor(
         PaymentTokenParams[] memory tokens,
@@ -74,7 +76,7 @@ contract OffscriptPayment is Ownable {
         }
 
         for (uint256 i = 0; i < tokens.length; i++) {
-            oracles[tokens[i].token] = tokens[i].oracle;
+            oracles[tokens[i].token] = AggregatorV3Interface(tokens[i].oracle);
         }
 
         basePrice = _basePrice;
@@ -90,10 +92,9 @@ contract OffscriptPayment is Ownable {
 
     /// Checks whether an address is whitelisted for a discount
     /// @param _addr Address to check
-    /// @return true if whitelisted, false if not
-    function checkWhitelist(address _addr) internal view returns (bool) {
-        // TODO:
-        return false;
+    /// @return whitelisted true if whitelisted, false if not
+    function checkWhitelist(address _addr) internal view returns (bool whitelisted) {
+        return whitelist[_addr];
     }
 
     /// Purchase a ticket with ETH
@@ -156,9 +157,9 @@ contract OffscriptPayment is Ownable {
 
         (, int256 price,,,) = oracle.latestRoundData();
         uint256 usdPrice = _extended ? extendedPrice : basePrice;
+        uint256 oracleDecimals = oracle.decimals();
 
-        return
-            (((usdPrice * 10 ** (oracle.decimals() * 2)) / uint256(price)) * 10 ** decimals) / 10 ** oracle.decimals();
+        return (((usdPrice * 10 ** (oracleDecimals * 2)) / uint256(price)) * 10 ** decimals) / 10 ** oracleDecimals;
     }
 
     /// Gets the price of a ticket, after considering a possible whitelist discount
@@ -170,7 +171,7 @@ contract OffscriptPayment is Ownable {
         price = getBasePrice(_token, _extended);
 
         if (checkWhitelist(_buyer)) {
-            uint256 discount = price * discountPct / 100;
+            uint256 discount = price * discountPct / 10000;
             price -= discount;
         }
 
@@ -213,5 +214,13 @@ contract OffscriptPayment is Ownable {
         }
 
         supply = _newSupply;
+    }
+
+    /// Adds addresses to the whitelist
+    /// @param _addrs whitelisted addresses
+    function addToWhitelist(address[] calldata _addrs) public onlyOwner {
+        for (uint256 i = 0; i < _addrs.length; i++) {
+            whitelist[_addrs[i]] = true;
+        }
     }
 }
