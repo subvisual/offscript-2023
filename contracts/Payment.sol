@@ -115,6 +115,7 @@ contract OffscriptPayment is Ownable {
         }
 
         sold++;
+        whitelist[msg.sender] = false;
         emit Payment(msg.sender, 0, /*tokenId*/ address(0), _extended, price);
     }
 
@@ -134,6 +135,7 @@ contract OffscriptPayment is Ownable {
         uint256 price = getPriceForBuyer(msg.sender, _token, _extended);
 
         sold++;
+        whitelist[msg.sender] = false;
         IERC20(_token).safeTransferFrom(msg.sender, address(this), price);
         emit Payment(msg.sender, 0, /*tokenId*/ _token, _extended, price);
     }
