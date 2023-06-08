@@ -4,8 +4,6 @@ pragma solidity ^0.8.19;
 import "forge-std/Test.sol";
 import "forge-std/StdMath.sol";
 
-import {DAI, USDC, USDT} from "contracts/mocks/Tokens.sol";
-import {MockOracleUSD, MockOracleETH} from "contracts/mocks/Oracles.sol";
 import {OffscriptPayment} from "contracts/Payment.sol";
 
 contract PaymentTest is Test {
@@ -41,7 +39,7 @@ contract PaymentTest is Test {
             oracle: address(0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9)
         });
 
-        payment = new OffscriptPayment(tokens, 800, 950, 2000, 10);
+        payment = new OffscriptPayment(tokens, 800, 2000, 10);
     }
 
     function test_values() public {
@@ -49,8 +47,7 @@ contract PaymentTest is Test {
         assertEq(address(payment.oracles(dai)), address(0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9));
         assertEq(address(payment.oracles(usdc)), address(0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6));
         assertEq(address(payment.oracles(usdt)), address(0x3E7d1eAB13ad0104d2750B8863b489D65364e32D));
-        assertEq(payment.basePrice(), 800);
-        assertEq(payment.extendedPrice(), 950);
+        assertEq(payment.price(), 800);
         assertEq(payment.discountPct(), 2000);
         assertEq(payment.supply(), 10);
     }
@@ -59,32 +56,20 @@ contract PaymentTest is Test {
         uint256 price;
 
         // eth
-        price = payment.getBasePrice(eth, false);
+        price = payment.getBasePrice(eth);
         assert(stdMath.delta(price, 0.44 ether) < 0.01 ether);
 
-        price = payment.getBasePrice(eth, true);
-        assert(stdMath.delta(price, 0.51 ether) < 0.01 ether);
-
         // usdc
-        price = payment.getBasePrice(usdc, false);
+        price = payment.getBasePrice(usdc);
         assert(stdMath.delta(price, 800e6) < 2e6);
-
-        price = payment.getBasePrice(usdc, true);
-        assert(stdMath.delta(price, 950e6) < 1e6);
 
         // usdt
-        price = payment.getBasePrice(usdt, false);
+        price = payment.getBasePrice(usdt);
         assert(stdMath.delta(price, 800e6) < 2e6);
 
-        price = payment.getBasePrice(usdt, true);
-        assert(stdMath.delta(price, 950e6) < 1e6);
-
         // dai
-        price = payment.getBasePrice(dai, false);
+        price = payment.getBasePrice(dai);
         assert(stdMath.delta(price, 800 ether) < 2 ether);
-
-        price = payment.getBasePrice(dai, true);
-        assert(stdMath.delta(price, 950 ether) < 1 ether);
     }
 
     function test_getPriceForBuyer() public {
@@ -94,37 +79,37 @@ contract PaymentTest is Test {
         whitelist[0] = address(this);
 
         // eth before whitelist
-        price = payment.getPriceForBuyer(address(this), eth, false);
+        price = payment.getPriceForBuyer(address(this), eth);
         assert(stdMath.delta(price, 0.44 ether) < 0.01 ether);
 
         // usdc before whitelist
-        price = payment.getPriceForBuyer(address(this), usdc, false);
+        price = payment.getPriceForBuyer(address(this), usdc);
         assert(stdMath.delta(price, 800e6) < 2e6);
 
         // usdt before whitelist
-        price = payment.getPriceForBuyer(address(this), usdt, false);
+        price = payment.getPriceForBuyer(address(this), usdt);
         assert(stdMath.delta(price, 800e6) < 2e6);
 
         // dai before whitelist
-        price = payment.getPriceForBuyer(address(this), dai, false);
+        price = payment.getPriceForBuyer(address(this), dai);
         assert(stdMath.delta(price, 800 ether) < 2 ether);
 
         payment.addToWhitelist(whitelist);
 
         // eth, after whitelist
-        price = payment.getPriceForBuyer(address(this), eth, false);
+        price = payment.getPriceForBuyer(address(this), eth);
         assert(stdMath.delta(price, 0.34 ether) < 0.01 ether);
 
         // usdc after whitelist
-        price = payment.getPriceForBuyer(address(this), usdc, false);
+        price = payment.getPriceForBuyer(address(this), usdc);
         assert(stdMath.delta(price, 640e6) < 2e6);
 
         // usdt after whitelist
-        price = payment.getPriceForBuyer(address(this), usdt, false);
+        price = payment.getPriceForBuyer(address(this), usdt);
         assert(stdMath.delta(price, 640e6) < 2e6);
 
         // dai after whitelist
-        price = payment.getPriceForBuyer(address(this), dai, false);
+        price = payment.getPriceForBuyer(address(this), dai);
         assert(stdMath.delta(price, 640 ether) < 2 ether);
     }
 }

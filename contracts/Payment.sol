@@ -31,7 +31,7 @@ contract OffscriptPayment is Ownable {
     //
 
     /// On every new payment
-    event Payment(address indexed payer, uint256 indexed nftId, address indexed tokenId, bool extended, uint256 amount);
+    event Payment(address indexed payer, address indexed tokenId);
 
     //
     // State
@@ -44,10 +44,7 @@ contract OffscriptPayment is Ownable {
     // IOffscript2023 public nft;
 
     // base ticket price, in USD
-    uint16 public immutable basePrice;
-
-    // extended ticket price, in USD
-    uint16 public immutable extendedPrice;
+    uint16 public immutable price;
 
     //Ticket Supply
     uint16 public supply;
@@ -66,12 +63,11 @@ contract OffscriptPayment is Ownable {
         PaymentTokenParams[] memory tokens,
         // TODO: still needed?
         // IOffscript2023 _nft,
-        uint16 _basePrice,
-        uint16 _extendedPrice,
+        uint16 _price,
         uint16 _discountPct,
         uint16 _supply
     ) Ownable() {
-        if (_discountPct == 0 || _discountPct >= 10000) {
+        if (_discountPct == 0 || _discountPct >= 10000 || _price == 0 || _discountPct == 0 || _supply == 0) {
             revert InvalidArguments();
         }
 
@@ -79,8 +75,7 @@ contract OffscriptPayment is Ownable {
             oracles[tokens[i].token] = AggregatorV3Interface(tokens[i].oracle);
         }
 
-        basePrice = _basePrice;
-        extendedPrice = _extendedPrice;
+        price = _price;
         discountPct = _discountPct;
 
         supply = _supply;
@@ -98,13 +93,12 @@ contract OffscriptPayment is Ownable {
     }
 
     /// Purchase a ticket with ETH
-    /// @param _extended Whether to purchase an extended ticket
-    function payWithEth(bool _extended) external payable {
+    function payWithEth() external payable {
         if (sold == supply) {
             revert Depleted();
         }
 
-        uint256 price = getPriceForBuyer(msg.sender, address(0), _extended);
+        uint256 price = getPriceForBuyer(msg.sender, address(0));
 
         if (msg.value < price) {
             revert NotEnoughPayment();
@@ -116,13 +110,12 @@ contract OffscriptPayment is Ownable {
 
         sold++;
         whitelist[msg.sender] = false;
-        emit Payment(msg.sender, 0, /*tokenId*/ address(0), _extended, price);
+        emit Payment(msg.sender, address(0));
     }
 
     /// Purchase a ticket with ERC20
     /// @param _token The payment token to use. Must be in the oracle map
-    /// @param _extended Whether to purchase an extended ticket
-    function payWithERC20(address _token, bool _extended) external {
+    function payWithERC20(address _token) external {
         if (sold == supply) {
             revert Depleted();
         }
@@ -132,19 +125,18 @@ contract OffscriptPayment is Ownable {
             revert InvalidArguments();
         }
 
-        uint256 price = getPriceForBuyer(msg.sender, _token, _extended);
+        uint256 price = getPriceForBuyer(msg.sender, _token);
 
         sold++;
         whitelist[msg.sender] = false;
         IERC20(_token).safeTransferFrom(msg.sender, address(this), price);
-        emit Payment(msg.sender, 0, /*tokenId*/ _token, _extended, price);
+        emit Payment(msg.sender, _token);
     }
 
     /// Gets the base price of a ticket, without considering whitelist discount
     /// @param _token Purchase token. 0x0 if ETH
-    /// @param _extended Whether to get the price for an extended ticket
     /// @return price expressed in {_token}
-    function getBasePrice(address _token, bool _extended) public view returns (uint256) {
+    function getBasePrice(address _token) public view returns (uint256) {
         AggregatorV3Interface oracle = oracles[_token];
 
         if (address(oracle) == address(0)) {
@@ -157,20 +149,18 @@ contract OffscriptPayment is Ownable {
             decimals = IERC20Metadata(_token).decimals();
         }
 
-        (, int256 price,,,) = oracle.latestRoundData();
-        uint256 usdPrice = _extended ? extendedPrice : basePrice;
+        (, int256 rate,,,) = oracle.latestRoundData();
         uint256 oracleDecimals = oracle.decimals();
 
-        return (((usdPrice * 10 ** (oracleDecimals * 2)) / uint256(price)) * 10 ** decimals) / 10 ** oracleDecimals;
+        return (((price * 10 ** (oracleDecimals * 2)) / uint256(rate)) * 10 ** decimals) / 10 ** oracleDecimals;
     }
 
     /// Gets the price of a ticket, after considering a possible whitelist discount
     /// @param _buyer the potential buyer address
     /// @param _token Purchase token. 0x0 if ETH
-    /// @param _extended Whether to get the price for an extended ticket
     /// @return price expressed in {_token}
-    function getPriceForBuyer(address _buyer, address _token, bool _extended) public view returns (uint256 price) {
-        price = getBasePrice(_token, _extended);
+    function getPriceForBuyer(address _buyer, address _token) public view returns (uint256 price) {
+        price = getBasePrice(_token);
 
         if (checkWhitelist(_buyer)) {
             uint256 discount = price * discountPct / 10000;
