@@ -1,16 +1,16 @@
-// import { ContractsProvider } from "@/lib/ContractsContext";
-// import { MintProvider } from "@/lib/MintContext";
-// import { TicketProvider } from "@/lib/TicketContext";
+import { ContractsProvider } from "src/lib/ContractsContext";
 import IndexView from "../views/IndexView";
+import { MintProvider } from "src/lib/MintContext";
+import { TicketProvider } from "src/lib/TicketContext";
 
 export default function Home() {
   return (
-    <IndexView />
-    // <ContractsProvider>
-    //   <MintProvider>
-    //     <TicketProvider>
-    //     </TicketProvider>
-    //   </MintProvider>
-    // </ContractsProvider>
+     <ContractsProvider>
+       <MintProvider>
+         <TicketProvider>
+           <IndexView />
+         </TicketProvider>
+       </MintProvider>
+     </ContractsProvider>
   );
 }

@@ -10,6 +10,8 @@ import {
 
 import { useContracts } from "./ContractsContext";
 import { useMint } from "./MintContext";
+import { useWeb3React } from "@web3-react/core";
+import { Web3Provider } from "@ethersproject/providers";
 
 interface TicketContext {
   approvalTx?: any;
@@ -80,6 +82,7 @@ interface Props {
 }
 
 export function TicketProvider({ children }: Props) {
+  const { account } = useWeb3React<Web3Provider>();
   const { ticketContract, signer, dai, usdc, usdt } = useContracts();
   const { bestAsset } = useMint();
 
@@ -175,7 +178,7 @@ export function TicketProvider({ children }: Props) {
 
         let price = await ticketContract
           .connect(signer)
-          .getPriceERC20(token.address, nftId, extended);
+          .getPriceForBuyer(account, token.address);
         price = price.mul(110).div(100);
 
         if (price.lte(allowance)) {
@@ -219,7 +222,7 @@ export function TicketProvider({ children }: Props) {
       if (currency == "ETH") {
         let ethPrice = await ticketContract
           .connect(signer)
-          .getPriceEth(nftId, extended);
+          .getPriceForBuyer(account, "0x0");
         ethPrice = ethPrice.mul(110).div(100);
         tx = await ticketContract
           .connect(signer)
@@ -271,6 +274,7 @@ export function TicketProvider({ children }: Props) {
     })();
   }, [ticketTx]);
 
+  console.log('dsa')
   return (
     <TicketContext.Provider
       value={{

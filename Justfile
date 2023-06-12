@@ -3,6 +3,7 @@ set dotenv-load
 
 mnemonic := env_var_or_default("DEV_MNEMONIC", "test test test test test test test test test test test junk")
 sender := env_var_or_default("DEV_SENDER", "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
+mainnet := env_var("MAINNET_RPC_URL")
 
 #
 # aliases
@@ -44,8 +45,8 @@ eth:
   killall -9 anvil
   just build-contracts
   just test
-  sleep 1 && just eth-deploy &
-  anvil --host 0.0.0.0 --silent
+  sleep 2 && just eth-deploy &
+  anvil --host 0.0.0.0 --silent --fork-url {{ mainnet }} --fork-block-number 17430000
 
 build-contracts:
   forge build
