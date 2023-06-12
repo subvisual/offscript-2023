@@ -52,7 +52,7 @@ build-contracts:
 
 # start next.js dev server
 web:
-  yarn dev
+  yarn start
 
 # restart `just eth` when contracts change
 eth-watch:
