@@ -29,7 +29,7 @@ contract DevDeployScript is Script {
 
         uint16 price = 1065;
         uint16 discountPct = 20; // TODO
-        uint16 supply = 100; // TODO
+        uint16 supply = 25; // TODO
 
         vm.broadcast();
         OffscriptPayment payment = new OffscriptPayment(tokens, price, discountPct, supply);
