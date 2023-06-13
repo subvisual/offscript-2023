@@ -29,10 +29,10 @@ const Addresses: Record<number | string, string> =
         USDT: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
       }
     : {
-        ticket: "0x687bb6c57915aa2529efc7d2a26668855e022fae",
-        DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
-        USDC: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-        USDT: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+        ticket: "0x5fc8d32690cc91d4c39d9d3abcbd16989f875707",
+        DAI: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+        USDC: "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+        USDT: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
       };
 
 interface Props{
@@ -58,9 +58,7 @@ export function ContractsProvider({ children }: Props) {
     const usdc = new ethers.Contract(Addresses.USDC, ERC20ABI, library);
     const usdt = new ethers.Contract(Addresses.USDT, ERC20ABI, library);
     const signer = library.getSigner(0);
-    // nftContract.price().then((c: any) => console.log(c));
 
-    // console.log(nftContract);
     setContracts({ ticketContract, dai, usdc, usdt, signer });
   }, [chainId, library]);
 

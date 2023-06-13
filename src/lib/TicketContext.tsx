@@ -204,6 +204,7 @@ export function TicketProvider({ children }: Props) {
 
   // make transfer
   useEffect(() => {
+    console.log('here');
     (async function () {
       if (!approvalMined || !args || !ticketContract || !signer) {
         return;
