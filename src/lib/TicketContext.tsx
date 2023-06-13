@@ -67,7 +67,7 @@ async function submitData(
   };
 
   // TODO: this
-  return await fetch("https://ticket.web3creatives.com/", {
+  return await fetch("/", {
     method: "POST",
     headers,
     body: encode(data),
