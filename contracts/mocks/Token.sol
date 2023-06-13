@@ -6,8 +6,8 @@ import {ERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol"
 contract FakeToken is ERC20 {
     uint8 _decimals;
 
-    constructor(string memory name, uint8 decimals) ERC20(name, name) {
-        decimals = _decimals;
+    constructor(string memory name, uint8 __decimals) ERC20(name, name) {
+        _decimals = __decimals;
         _mint(msg.sender, 1000 * 10 ** _decimals);
     }
 

@@ -35,9 +35,9 @@ contract DevDeployScript is Script {
 
         OffscriptPayment payment = new OffscriptPayment(tokens, price, discountPct, supply);
 
-        // DAI(dai).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000 ether);
-        // DAI(usdc).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
-        // DAI(usdt).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
+        DAI(dai).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000 ether);
+        DAI(usdc).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
+        DAI(usdt).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
         vm.stopBroadcast();
     }
 }
