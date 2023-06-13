@@ -21,7 +21,7 @@ import ERC20ABI from "./abis/erc20.json";
 const ContractsContext = createContext<ContractsContext>({});
 
 const Addresses: Record<number | string, string> =
-  process.env.NODE_ENV === "production"
+  process.env.NEXT_PUBLIC_CHAIN_ID === "1"
     ? {
         ticket: "0x687bb6c57915aa2529efc7d2a26668855e022fae",
         DAI: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
