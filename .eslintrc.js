@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  extends: ["plugin:react/recommended", "prettier"],
+  extends: ["plugin:react/recommended", "prettier", "next"],
   overrides: [],
   parserOptions: {
     ecmaVersion: "latest",
@@ -19,6 +19,5 @@ module.exports = {
     "@typescript-eslint/space-before-function-paren": 0,
     "@typescript-eslint/no-confusing-void-expressions": 0,
     "@typescript-eslint/no-non-null-assertion": 0,
-    "@typescript-eslint/no-unused-vars": "warn",
   },
 };

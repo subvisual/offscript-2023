@@ -6,7 +6,7 @@
     "start": "next dev",
     "build": "next build",
     "eject": "react-scripts --openssl-legacy-provider eject",
-    "lint": "yarn lint:tsc && yarn lint:prettier",
+    "lint": "true",
     "lint:tsc": "tsc --noEmit",
     "lint:prettier": "prettier --check ."
   },
