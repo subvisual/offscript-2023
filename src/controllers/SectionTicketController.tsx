@@ -4,7 +4,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import { useWeb3React } from "@web3-react/core";
 
 import { useTicket } from "../lib/TicketContext";
-import { useMint } from "../lib/MintContext";
 
 import SectionTicketView from "../views/SectionTicketView";
 
@@ -19,24 +18,17 @@ const validateEmail = (email?: string) =>
 const validateCurrency = (currency?: string) =>
   currency && ["USDC", "USDT", "DAI", "ETH"].indexOf(currency) != -1;
 
-const validateTicketType = (type?: string) =>
-  type && ["regular", "extended"].indexOf(type) != -1;
-
-const RegularPrice = 800;
-const ExtendedPrice = 950;
+const Price = 1065;
+const DiscountedPrice = 850;
 
 const SectionTicketController: FC = () => {
   const { account } = useWeb3React<Web3Provider>();
-  const { bestAsset } = useMint();
+  const [discount, _setDiscount] = useState(false);
   const { supply, onTicketClick, ticketTx, approvalTx, approvalMined } =
     useTicket();
 
   const [email, setEmail] = useState<string | undefined>();
   const [currency, setCurrency] = useState<string | undefined>();
-  const [ticketType, setTicketType] = useState<string | undefined>("regular");
-
-  const [regularPrice, setRegularPrice] = useState(RegularPrice);
-  const [extendedPrice, setExtendedPrice] = useState(ExtendedPrice);
 
   const [notice, setNotice] = useState<string>(" ");
 
@@ -50,8 +42,7 @@ const SectionTicketController: FC = () => {
 
       if (
         !validateEmail(email) ||
-        !validateCurrency(currency) ||
-        !validateTicketType(ticketType)
+        !validateCurrency(currency)
       ) {
         return;
       }
@@ -60,21 +51,10 @@ const SectionTicketController: FC = () => {
         return;
       }
 
-      onTicketClick(email, currency, ticketType);
+      onTicketClick(email, currency);
     },
-    [email, currency, ticketType]
+    [email, currency]
   );
-
-  useEffect(() => {
-    if (!bestAsset) {
-      return;
-    }
-
-    setRegularPrice(RegularPrice - (RegularPrice * bestAsset.discount) / 100);
-    setExtendedPrice(
-      ExtendedPrice - (ExtendedPrice * bestAsset.discount) / 100
-    );
-  }, [bestAsset]);
 
   useEffect(() => {
     // already done
@@ -107,25 +87,17 @@ const SectionTicketController: FC = () => {
         <sock-email onChange={(e: any) => setEmail(e.target.value)} />
         <sock-currency onChange={(e: any) => setCurrency(e.target.value)} />
         <sock-buy-ticket onClick={onSubmit} />
-        <sock-radio-1
-          name="ticket-type"
-          onChange={() => setTicketType("regular")}
-        />
-        <sock-radio-2
-          name="ticket-type"
-          onChange={() => setTicketType("extended")}
-        />
 
-        {bestAsset ? (
+        {discount ? (
           <sock-price-1>
-            <del>€800</del>&nbsp;<span>€{regularPrice}</span>
+            <del>€850</del>&nbsp;<span>€{DiscountedPrice}</span>
           </sock-price-1>
         ) : (
           <sock-price-1 />
         )}
-        {bestAsset ? (
+        {!discount ? (
           <sock-price-2>
-            <del>€950</del>&nbsp;<span>€{extendedPrice}</span>
+            <del>€1065</del>&nbsp;<span>€{Price}</span>
           </sock-price-2>
         ) : (
           <sock-price-2 />

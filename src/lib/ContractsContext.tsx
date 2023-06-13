@@ -46,7 +46,6 @@ export function ContractsProvider({ children }: Props) {
     {}
   );
 
-  console.log(contracts);
   useEffect(() => {
     if (!library || !chainId) return;
 
@@ -55,7 +54,6 @@ export function ContractsProvider({ children }: Props) {
       paymentABI,
       library
     );
-    console.log(paymentABI);
     const dai = new ethers.Contract(Addresses.DAI, ERC20ABI, library);
     const usdc = new ethers.Contract(Addresses.USDC, ERC20ABI, library);
     const usdt = new ethers.Contract(Addresses.USDT, ERC20ABI, library);

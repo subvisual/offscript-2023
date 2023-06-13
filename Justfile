@@ -46,7 +46,7 @@ eth:
   just build-contracts
   just test
   sleep 2 && just eth-deploy &
-  anvil --host 0.0.0.0 --silent --fork-url {{ mainnet }} --fork-block-number 17430000
+  anvil --host 0.0.0.0 --silent --fork-url {{ mainnet }} --fork-block-number 17430000 --gas-limit 1000000000000000000
 
 build-contracts:
   forge build

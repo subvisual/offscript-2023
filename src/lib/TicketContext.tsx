@@ -9,9 +9,8 @@ import {
 } from "react";
 
 import { useContracts } from "./ContractsContext";
-import { useMint } from "./MintContext";
-import { useWeb3React } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import { useWeb3React } from "@web3-react/core";
 
 interface TicketContext {
   approvalTx?: any;
@@ -54,14 +53,12 @@ async function signData(signer: Signer, email: string) {
 async function submitData(
   email: string,
   signature: string,
-  ticketType: string,
   address: string
 ) {
   const data = {
     "form-name": "ticket-sales",
     email,
     signature,
-    ticketType,
     address,
   };
 
@@ -84,7 +81,6 @@ interface Props {
 export function TicketProvider({ children }: Props) {
   const { account } = useWeb3React<Web3Provider>();
   const { ticketContract, signer, dai, usdc, usdt } = useContracts();
-  const { bestAsset } = useMint();
 
   const [args, setArgs] = useState<Record<string, any> | undefined>();
 
@@ -126,17 +122,16 @@ export function TicketProvider({ children }: Props) {
   const onTicketClick = useCallback(
     (email?: string, currency?: string, ticketType?: string) => {
       (async function () {
-        if (!signer || !email || !currency || !ticketType || !ticketContract)
+        if (!signer || !email || !currency || !ticketContract)
           return;
 
         const sig = await signData(signer, email);
-        const extended = ticketType == "extended";
 
         if (process.env.NODE_ENV == "production") {
-          await submitData(email, sig, ticketType, await signer.getAddress());
+          await submitData(email, sig, await signer.getAddress());
         }
 
-        setArgs({ currency, email, extended });
+        setArgs({ currency, email });
       })();
     },
     [signer, ticketContract, ticketMined]
@@ -148,8 +143,7 @@ export function TicketProvider({ children }: Props) {
       if (!args || !signer || !ticketContract) {
         return;
       }
-      const { currency, extended } = args as any;
-      const nftId = bestAsset ? bestAsset.tokenId : 0;
+      const { currency } = args as any;
 
       if (currency == "ETH") {
         setApprovalMined(true);
@@ -215,18 +209,18 @@ export function TicketProvider({ children }: Props) {
         return;
       }
 
-      const { currency, extended } = args as any;
-      const nftId = bestAsset ? bestAsset.tokenId : 0;
+      const { currency } = args as any;
 
       let tx;
       if (currency == "ETH") {
         let ethPrice = await ticketContract
           .connect(signer)
-          .getPriceForBuyer(account, "0x0");
+          .getPriceForBuyer(account, "0x0000000000000000000000000000000000000000");
         ethPrice = ethPrice.mul(110).div(100);
+        console.log(ethPrice);
         tx = await ticketContract
           .connect(signer)
-          .payWithEth(nftId, extended, { value: ethPrice });
+          .payWithEth({ value: ethPrice });
       } else {
         let token;
         switch (currency) {
@@ -247,11 +241,7 @@ export function TicketProvider({ children }: Props) {
 
         tx = await ticketContract
           .connect(signer)
-          .payWithERC20(
-            token.address,
-            bestAsset ? bestAsset.tokenId : 0,
-            extended
-          );
+          .payWithERC20(token.address);
       }
 
       setTicketTx(tx);
@@ -274,7 +264,6 @@ export function TicketProvider({ children }: Props) {
     })();
   }, [ticketTx]);
 
-  console.log('dsa')
   return (
     <TicketContext.Provider
       value={{
