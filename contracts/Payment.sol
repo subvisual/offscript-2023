@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
-import "forge-std/console.sol";
-import {Ownable} from "lib/openzeppelin-contracts/contracts/access/Ownable.sol";
+import {AccessControl} from "lib/openzeppelin-contracts/contracts/access/AccessControl.sol";
 import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import {IERC20Metadata} from "lib/openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -12,7 +11,7 @@ import {AggregatorV3Interface} from "lib/chainlink/contracts/src/v0.8/interfaces
 
 import "./errors.sol";
 
-contract OffscriptPayment is Ownable {
+contract OffscriptPayment is AccessControl {
     //
     // Libraries
     //
@@ -66,7 +65,7 @@ contract OffscriptPayment is Ownable {
         uint16 _price,
         uint16 _discountPct,
         uint16 _supply
-    ) Ownable() {
+    ) AccessControl() {
         if (_discountPct == 0 || _discountPct >= 10000 || _price == 0 || _discountPct == 0 || _supply == 0) {
             revert InvalidArguments();
         }
@@ -79,6 +78,8 @@ contract OffscriptPayment is Ownable {
         discountPct = _discountPct;
 
         supply = _supply;
+
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     //
@@ -88,29 +89,8 @@ contract OffscriptPayment is Ownable {
     /// Checks whether an address is whitelisted for a discount
     /// @param _addr Address to check
     /// @return whitelisted true if whitelisted, false if not
-    function checkWhitelist(address _addr) internal view returns (bool whitelisted) {
+    function checkWhitelist(address _addr) public view returns (bool whitelisted) {
         return whitelist[_addr];
-    }
-
-    /// Purchase a ticket with ETH
-    function payWithEth() external payable {
-        if (sold == supply) {
-            revert Depleted();
-        }
-
-        uint256 price = getPriceForBuyer(msg.sender, address(0));
-
-        if (msg.value < price) {
-            revert NotEnoughPayment();
-        }
-        // refund excess
-        if (msg.value > price) {
-            payable(msg.sender).transfer(msg.value - price);
-        }
-
-        sold++;
-        whitelist[msg.sender] = false;
-        emit Payment(msg.sender, address(0));
     }
 
     /// Purchase a ticket with ERC20
@@ -125,11 +105,11 @@ contract OffscriptPayment is Ownable {
             revert InvalidArguments();
         }
 
-        uint256 price = getPriceForBuyer(msg.sender, _token);
+        uint256 priceForBuyer = getPriceForBuyer(msg.sender, _token);
 
         sold++;
         whitelist[msg.sender] = false;
-        IERC20(_token).safeTransferFrom(msg.sender, address(this), price);
+        IERC20(_token).safeTransferFrom(msg.sender, address(this), priceForBuyer);
         emit Payment(msg.sender, _token);
     }
 
@@ -158,13 +138,13 @@ contract OffscriptPayment is Ownable {
     /// Gets the price of a ticket, after considering a possible whitelist discount
     /// @param _buyer the potential buyer address
     /// @param _token Purchase token. 0x0 if ETH
-    /// @return price expressed in {_token}
-    function getPriceForBuyer(address _buyer, address _token) public view returns (uint256 price) {
-        price = getBasePrice(_token);
+    /// @return priceForBuyer expressed in {_token}
+    function getPriceForBuyer(address _buyer, address _token) public view returns (uint256 priceForBuyer) {
+        priceForBuyer = getBasePrice(_token);
 
         if (checkWhitelist(_buyer)) {
-            uint256 discount = price * discountPct / 10000;
-            price -= discount;
+            uint256 discount = priceForBuyer * discountPct / 100;
+            priceForBuyer -= discount;
         }
 
         // TODO: check whitelist and apply discount
@@ -185,7 +165,7 @@ contract OffscriptPayment is Ownable {
     //
 
     /// Collects payments
-    function sweep(address[] memory addresses) external onlyOwner {
+    function sweep(address[] memory addresses) external onlyRole(DEFAULT_ADMIN_ROLE) {
         for (uint256 i = 0; i < addresses.length; i++) {
             if (addresses[i] == address(0x0) && address(this).balance > 0) {
                 payable(msg.sender).transfer(address(this).balance);
@@ -200,7 +180,7 @@ contract OffscriptPayment is Ownable {
     }
 
     /// Overrides the available supply
-    function setSupply(uint16 _newSupply) public onlyOwner {
+    function setSupply(uint16 _newSupply) public onlyRole(DEFAULT_ADMIN_ROLE) {
         if (_newSupply < sold) {
             revert InvalidArguments();
         }
@@ -210,7 +190,7 @@ contract OffscriptPayment is Ownable {
 
     /// Adds addresses to the whitelist
     /// @param _addrs whitelisted addresses
-    function addToWhitelist(address[] calldata _addrs) public onlyOwner {
+    function addToWhitelist(address[] calldata _addrs) public onlyRole(DEFAULT_ADMIN_ROLE) {
         for (uint256 i = 0; i < _addrs.length; i++) {
             whitelist[_addrs[i]] = true;
         }

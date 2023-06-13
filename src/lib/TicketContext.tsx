@@ -145,44 +145,39 @@ export function TicketProvider({ children }: Props) {
       }
       const { currency } = args as any;
 
-      if (currency == "ETH") {
-        setApprovalMined(true);
+      let token;
+      switch (currency) {
+        case "DAI":
+          token = dai;
+          break;
+        case "USDT":
+          token = usdt;
+          break;
+        case "USDC":
+          token = usdc;
+          break;
+      }
+
+      if (!token) {
         return;
+      }
+
+      const allowance = await token
+        .connect(signer)
+        .allowance(await signer.getAddress(), ticketContract.address);
+
+      let price = await ticketContract
+        .connect(signer)
+        .getPriceForBuyer(account, token.address);
+      price = price.mul(110).div(100);
+
+      if (price.lte(allowance)) {
+        setApprovalMined(true);
       } else {
-        let token;
-        switch (currency) {
-          case "DAI":
-            token = dai;
-            break;
-          case "USDT":
-            token = usdt;
-            break;
-          case "USDC":
-            token = usdc;
-            break;
-        }
-
-        if (!token) {
-          return;
-        }
-
-        const allowance = await token
+        const tx = await token
           .connect(signer)
-          .allowance(await signer.getAddress(), ticketContract.address);
-
-        let price = await ticketContract
-          .connect(signer)
-          .getPriceForBuyer(account, token.address);
-        price = price.mul(110).div(100);
-
-        if (price.lte(allowance)) {
-          setApprovalMined(true);
-        } else {
-          const tx = await token
-            .connect(signer)
-            .approve(ticketContract.address, price);
-          setApprovalTx(tx);
-        }
+          .approve(ticketContract.address, price);
+        setApprovalTx(tx);
       }
     })();
   }, [args, signer, ticketContract]);
@@ -204,7 +199,6 @@ export function TicketProvider({ children }: Props) {
 
   // make transfer
   useEffect(() => {
-    console.log('here');
     (async function () {
       if (!approvalMined || !args || !ticketContract || !signer) {
         return;
@@ -213,37 +207,26 @@ export function TicketProvider({ children }: Props) {
       const { currency } = args as any;
 
       let tx;
-      if (currency == "ETH") {
-        let ethPrice = await ticketContract
-          .connect(signer)
-          .getPriceForBuyer(account, "0x0000000000000000000000000000000000000000");
-        ethPrice = ethPrice.mul(110).div(100);
-        console.log(ethPrice);
-        tx = await ticketContract
-          .connect(signer)
-          .payWithEth({ value: ethPrice });
-      } else {
-        let token;
-        switch (currency) {
-          case "DAI":
-            token = dai;
-            break;
-          case "USDT":
-            token = usdt;
-            break;
-          case "USDC":
-            token = usdc;
-            break;
-        }
-
-        if (!token) {
-          return;
-        }
-
-        tx = await ticketContract
-          .connect(signer)
-          .payWithERC20(token.address);
+      let token;
+      switch (currency) {
+        case "DAI":
+          token = dai;
+          break;
+        case "USDT":
+          token = usdt;
+          break;
+        case "USDC":
+          token = usdc;
+          break;
       }
+
+      if (!token) {
+        return;
+      }
+
+      tx = await ticketContract
+        .connect(signer)
+        .payWithERC20(token.address);
 
       setTicketTx(tx);
     })();

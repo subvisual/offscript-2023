@@ -9,24 +9,20 @@ contract DevDeployScript is Script {
     function setUp() public {}
 
     function run() public {
-        OffscriptPayment.PaymentTokenParams[] memory tokens = new OffscriptPayment.PaymentTokenParams[](4);
+        OffscriptPayment.PaymentTokenParams[] memory tokens = new OffscriptPayment.PaymentTokenParams[](3);
 
-        tokens[0] = OffscriptPayment.PaymentTokenParams({
-            token: address(0x0),
-            oracle: address(0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419)
-        });
         // DAI
-        tokens[1] = OffscriptPayment.PaymentTokenParams({
+        tokens[0] = OffscriptPayment.PaymentTokenParams({
             token: address(0x6B175474E89094C44Da98b954EedeAC495271d0F),
             oracle: address(0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9)
         });
         // USDC
-        tokens[2] = OffscriptPayment.PaymentTokenParams({
+        tokens[1] = OffscriptPayment.PaymentTokenParams({
             token: address(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48),
             oracle: address(0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6)
         });
         // USDT
-        tokens[3] = OffscriptPayment.PaymentTokenParams({
+        tokens[2] = OffscriptPayment.PaymentTokenParams({
             token: address(0xdAC17F958D2ee523a2206206994597C13D831ec7),
             oracle: address(0x3E7d1eAB13ad0104d2750B8863b489D65364e32D)
         });
@@ -42,7 +38,7 @@ contract DevDeployScript is Script {
         payment.addToWhitelist(whitelist());
     }
 
-    function whitelist() internal view returns (address[] memory addrs) {
+    function whitelist() internal pure returns (address[] memory addrs) {
         addrs = new address[](26);
         addrs[0] = address(0x809FA673fe2ab515FaA168259cB14E2BeDeBF68e);
         addrs[1] = address(0xc9A900B5C828aC2d30bCa757aB3d5A5Dd9E74a73);

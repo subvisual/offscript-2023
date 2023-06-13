@@ -8,7 +8,7 @@ contract FakeToken is ERC20 {
 
     constructor(string memory name, uint8 __decimals) ERC20(name, name) {
         _decimals = __decimals;
-        _mint(msg.sender, 1000 * 10 ** _decimals);
+        _mint(msg.sender, 10000 * 10 ** _decimals);
     }
 
     function decimals() public view override(ERC20) returns (uint8) {

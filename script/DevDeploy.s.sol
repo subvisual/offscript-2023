@@ -17,27 +17,28 @@ contract DevDeployScript is Script {
         address usdt = address(new USDT());
 
         address usdOracle = address(new FakeOracleUSD());
-        address ethOracle = address(new FakeOracleETH());
 
-        OffscriptPayment.PaymentTokenParams[] memory tokens = new OffscriptPayment.PaymentTokenParams[](4);
+        OffscriptPayment.PaymentTokenParams[] memory tokens = new OffscriptPayment.PaymentTokenParams[](3);
 
-        tokens[0] = OffscriptPayment.PaymentTokenParams({token: address(0x0), oracle: ethOracle});
         // DAI
-        tokens[1] = OffscriptPayment.PaymentTokenParams({token: dai, oracle: usdOracle});
+        tokens[0] = OffscriptPayment.PaymentTokenParams({token: dai, oracle: usdOracle});
         // USDC
-        tokens[2] = OffscriptPayment.PaymentTokenParams({token: usdc, oracle: usdOracle});
+        tokens[1] = OffscriptPayment.PaymentTokenParams({token: usdc, oracle: usdOracle});
         // USDT
-        tokens[3] = OffscriptPayment.PaymentTokenParams({token: usdt, oracle: usdOracle});
+        tokens[2] = OffscriptPayment.PaymentTokenParams({token: usdt, oracle: usdOracle});
 
         uint16 price = 1065;
         uint16 discountPct = 20; // TODO
         uint16 supply = 100; // TODO
 
         OffscriptPayment payment = new OffscriptPayment(tokens, price, discountPct, supply);
+        payment.addToWhitelist(whitelist());
 
-        DAI(dai).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000 ether);
-        DAI(usdc).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
-        DAI(usdt).mint(address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266), 1000e6);
         vm.stopBroadcast();
+    }
+
+    function whitelist() internal pure returns (address[] memory addrs) {
+        addrs = new address[](1);
+        addrs[0] = address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266);
     }
 }

@@ -40,10 +40,7 @@ const SectionTicketController: FC = () => {
         return;
       }
 
-      if (
-        !validateEmail(email) ||
-        !validateCurrency(currency)
-      ) {
+      if (!validateEmail(email) || !validateCurrency(currency)) {
         return;
       }
 
@@ -69,7 +66,6 @@ const SectionTicketController: FC = () => {
     } else if (approvalTx && !approvalMined) {
       setNotice("Waiting for approval tx to be mined...");
     } else if (currency && currency != "ETH") {
-      console.log(currency);
       setNotice("You may first need to set a token allowance");
     } else {
       setNotice(" ");

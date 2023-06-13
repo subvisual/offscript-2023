@@ -165,11 +165,18 @@ class SectionTicketView extends React.Component {
                         props.children
                       ) : (
                         <React.Fragment>
-                          <option value>Select a currency</option>
-                          <option value="ETH">ETH</option>
-                          <option value="USDC">USDC</option>
-                          <option value="USDT">USDT</option>
-                          <option value="DAI">DAI</option>
+                          <option value style={{ color: "black" }}>
+                            Select a currency
+                          </option>
+                          <option value="USDC" style={{ color: "black" }}>
+                            USDC
+                          </option>
+                          <option value="USDT" style={{ color: "black" }}>
+                            USDT
+                          </option>
+                          <option value="DAI" style={{ color: "black" }}>
+                            DAI
+                          </option>
                         </React.Fragment>
                       )}
                     </select>
