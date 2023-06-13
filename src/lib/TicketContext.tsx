@@ -67,7 +67,7 @@ async function submitData(
   };
 
   // TODO: this
-  return await fetch("https://nft.web3creatives.com/", {
+  return await fetch("https://ticket.web3creatives.com/", {
     method: "POST",
     headers,
     body: encode(data),
