@@ -4,6 +4,8 @@ set dotenv-load
 mnemonic := env_var_or_default("DEV_MNEMONIC", "test test test test test test test test test test test junk")
 sender := env_var_or_default("DEV_SENDER", "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266")
 mainnet := env_var("MAINNET_RPC_URL")
+mainnet_pk := env_var("MAINNET_PRIVATE_KEY")
+mainnet_sender := env_var("MAINNET_SENDER")
 
 #
 # aliases
@@ -76,5 +78,12 @@ forge-script script:
     --fork-url http://localhost:8545 \
     --broadcast \
     --mnemonics "{{ mnemonic }}" \
-    --sender "{{ sender }}" \
-    --json
+    --sender "{{ sender }}"
+
+# run a forge script from the appropriate sender
+mainnet-script script:
+  forge script \
+    $1 \
+    --fork-url {{ mainnet }} \
+    --private-key "{{ mainnet_pk }}" \
+    --sender "{{ mainnet_sender }}"

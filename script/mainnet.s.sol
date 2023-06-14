@@ -28,17 +28,16 @@ contract DevDeployScript is Script {
         });
 
         uint16 price = 1065;
-        uint16 discountPct = 20; // TODO
-        uint16 supply = 25; // TODO
+        uint16 discountPct = 20;
+        uint16 supply = 25;
 
-        vm.broadcast();
+        vm.startBroadcast();
         OffscriptPayment payment = new OffscriptPayment(tokens, price, discountPct, supply);
 
-        vm.broadcast();
         payment.addToWhitelist(whitelist());
 
-        vm.broadcast();
         payment.grantRole(payment.DEFAULT_ADMIN_ROLE(), address(0x2a84EeE5eCa5c5DD031E53bE179E429f49E87d39));
+        vm.stopBroadcast();
     }
 
     function whitelist() internal pure returns (address[] memory addrs) {
