@@ -41,7 +41,7 @@ contract DevDeployScript is Script {
     }
 
     function whitelist() internal pure returns (address[] memory addrs) {
-        addrs = new address[](26);
+        addrs = new address[](27);
         addrs[0] = address(0x809FA673fe2ab515FaA168259cB14E2BeDeBF68e);
         addrs[1] = address(0xc9A900B5C828aC2d30bCa757aB3d5A5Dd9E74a73);
         addrs[2] = address(0x39cf6E0Ba4C4530735616e1Ee7ff5FbCB726fBd2);
@@ -68,5 +68,6 @@ contract DevDeployScript is Script {
         addrs[23] = address(0xC3696182e4672A695cB3FA197647081549C9061e);
         addrs[24] = address(0x54f252F92D58Bd5c3a31c40B71cab59b8Bc85cd4);
         addrs[25] = address(0x1B2f066126475d61bb7a24261Ac30EAB00d84c40);
+        addrs[26] = address(0x354d03288a846C43fAe463D666C3d2E2726aAE88);
     }
 }
