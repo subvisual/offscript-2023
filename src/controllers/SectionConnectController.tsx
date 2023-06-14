@@ -21,19 +21,37 @@ const network = new NetworkConnector({
 function SectionConnectController() {
   const { account, activate } = useWeb3React<Web3Provider>();
 
-  if (account) {
-    return <></>;
-  }
-
   const onConnectBTN = (e: any) => {
     e.preventDefault();
     activate(injected);
   };
 
+  const changeNetwork = async () => {
+    const w = window as any;
+    if (w.ethereum) {
+      try {
+        await w.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: "0x1" }],
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
   // connect to network provider
   useEffect(() => {
     activate(network);
+  }, [activate]);
+
+  useEffect(() => {
+    changeNetwork();
   }, []);
+
+  if (account) {
+    return <></>;
+  }
 
   return (
     <SectionConnectView>
