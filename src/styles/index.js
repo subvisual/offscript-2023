@@ -11,7 +11,7 @@ const styles = [
   },
   {
     type: 'href',
-    body: '/css/offscript-website-325e235569d243ef7486b.webflow.css',
+    body: '/css/offscript-tickets.webflow.css',
   },
   {
     type: 'sheet',
@@ -58,14 +58,14 @@ export default Promise.all(loadingStyles).then(() => {
     Array.from(styleSheet.rules).forEach((rule) => {
       if (rule.selectorText) {
         rule.selectorText = rule.selectorText
-          .replace(/\.([\w_-]+)/g, '.$1')
-          .replace(/\[class(.?)="( ?)([^"]+)( ?)"\]/g, '[class$1="$2$3$4"]')
+          .replace(/\.([\w_-]+)/g, '.af-class-$1')
+          .replace(/\[class(.?)="( ?)([^"]+)( ?)"\]/g, '[class$1="$2af-class-$3$4"]')
           .replace(/([^\s][^,]*)(\s*,?)/g, '.af-view $1$2')
           .replace(/\.af-view html/g, '.af-view')
           .replace(/\.af-view body/g, '.af-view')
-          .replace(/w-/g, 'w-')
-          .replace(/anima-/g, 'anima-')
-          .replace(/([\w_-]+)an-animation([\w_-]+)/g, '$1an-animation$2')
+          .replace(/af-class-w-/g, 'w-')
+          .replace(/af-class-anima-/g, 'anima-')
+          .replace(/af-class-([\w_-]+)an-animation([\w_-]+)/g, '$1an-animation$2')
       }
     })
   })
