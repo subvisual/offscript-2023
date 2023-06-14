@@ -86,4 +86,6 @@ mainnet-script script:
     $1 \
     --fork-url {{ mainnet }} \
     --private-key "{{ mainnet_pk }}" \
-    --sender "{{ mainnet_sender }}"
+    --sender "{{ mainnet_sender }}" \
+    --with-gas-price "35000000000" \
+    --broadcast
