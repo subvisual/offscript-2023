@@ -20,6 +20,7 @@ import ERC20ABI from "./abis/erc20.json";
 
 const ContractsContext = createContext<ContractsContext>({});
 
+console.log(process.env.NEXT_PUBLIC_CHAIN_ID);
 const Addresses: Record<number | string, string> =
   process.env.NEXT_PUBLIC_CHAIN_ID === "1"
     ? {
@@ -35,6 +36,7 @@ const Addresses: Record<number | string, string> =
         USDT: "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
       };
 
+console.log(Addresses);
 interface Props{
   children: React.ReactNode
 }

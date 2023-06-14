@@ -1809,6 +1809,6 @@ textarea.w-select {
 .af-view .w-condition-invisible {
   display: none !important;
 }
-.af-view .af-class-wf-layout-layout {
+.af-view .wf-layout-layout {
   display: grid;
 }

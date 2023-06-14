@@ -70,15 +70,15 @@ class SectionTicketSuccessView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="af-class-section af-class-is--80padding af-class-wf-section">
-            <div className="af-class-_1077_container">
-              <div className="af-class-overflow_hidden">
-                <div className="af-class-heading--137 af-class-_24margin-bottom af-class-animation-fadein">TICKET PURCHASED</div>
+          <div className="section is--80padding wf-section">
+            <div className="_1077_container">
+              <div className="overflow_hidden">
+                <div className="heading--137 _24margin-bottom animation-fadein">TICKET PURCHASED</div>
               </div>
               {map(proxies['sock-hash'], props => <a href="#" {...{...props, className: `w-inline-block ${props.className || ''}`}}>{createScope(props.children, proxies => <React.Fragment>
-                {map(proxies['sock-ticket-hash'], props => <div {...{...props, className: `af-class-text--20 ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>View on Etherscan</React.Fragment>}</div>)}
+                {map(proxies['sock-ticket-hash'], props => <div {...{...props, className: `text--20 ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>View on Etherscan</React.Fragment>}</div>)}
               </React.Fragment>)}</a>)}
-              <div className="af-class-faq--question-title af-class-_16margin-top">Thank you! Your ticket will arrive in the next few hours 💛</div>
+              <div className="faq--question-title _16margin-top">Thank you! Your ticket will arrive in the next few hours 💛</div>
             </div>
           </div>
         </span>
