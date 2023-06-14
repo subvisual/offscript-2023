@@ -18,6 +18,9 @@ const network = new NetworkConnector({
   defaultChainId: process.env.NODE_ENV === "production" ? 1 : 31337,
 });
 
+const chainId = process.env.NODE_ENV === "production" ? "0x1" : "0x7A69";
+console.log(chainId);
+
 function SectionConnectController() {
   const { account, activate } = useWeb3React<Web3Provider>();
 
@@ -32,7 +35,7 @@ function SectionConnectController() {
       try {
         await w.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId: "0x1" }],
+          params: [{ chainId }],
         });
       } catch (error) {
         console.error(error);

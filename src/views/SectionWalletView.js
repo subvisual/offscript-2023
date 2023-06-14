@@ -71,21 +71,21 @@ class SectionWalletView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="af-class-section af-class-is--80padding af-class-wf-section">
-            <div className="af-class-_1077_container">
-              <div className="af-class-overflow_hidden">
-                <div className="af-class-heading--137 af-class-_24margin-bottom">Wallet Connected</div>
+          <div className="section is--80padding wf-section">
+            <div className="_1077_container">
+              <div className="overflow_hidden">
+                <div className="heading--137 _24margin-bottom">Wallet Connected</div>
               </div>
-              {map(proxies['sock-address'], props => <div {...{...props, className: `af-class-faq--question-title ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>WALLET ADDRESS</React.Fragment>}</div>)}
-              {map(proxies['sock-already-ticket'], props => <div {...{...props, className: `af-class-text--20 af-class-info ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>You already have a ticket.</React.Fragment>}</div>)}
-              <div className="af-class-_60margin-top af-class-_20-tablet">
-                <div className="af-class-overflow_hidden">
-                  <div className="af-class-getticket-background af-class-small">
-                    {map(proxies['sock-buy'], props => <a href="#" {...{...props, className: `af-class-getticket-btn-2 af-class-_100 w-inline-block ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>
-                      <div className="af-class-overflow_hidden">
-                        <div className="af-class-hover-text-wrapper af-class-small af-class-animation-fadein">
-                          <div className="af-class-text_hover">BUY TICKET</div>
-                          <div className="af-class-text_hover">connect wallet</div>
+              {map(proxies['sock-address'], props => <div {...{...props, className: `faq--question-title ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>WALLET ADDRESS</React.Fragment>}</div>)}
+              {map(proxies['sock-already-ticket'], props => <div {...{...props, className: `text--20 info ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>You already have a ticket.</React.Fragment>}</div>)}
+              <div className="_60margin-top _20-tablet">
+                <div className="overflow_hidden">
+                  <div className="getticket-background small">
+                    {map(proxies['sock-buy'], props => <a href="#" {...{...props, className: `getticket-btn-2 _100 w-inline-block ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>
+                      <div className="overflow_hidden">
+                        <div className="hover-text-wrapper small animation-fadein">
+                          <div className="text_hover">BUY TICKET</div>
+                          <div className="text_hover">connect wallet</div>
                         </div>
                       </div>
                     </React.Fragment>}</a>)}
