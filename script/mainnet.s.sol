@@ -36,6 +36,9 @@ contract DevDeployScript is Script {
 
         vm.broadcast();
         payment.addToWhitelist(whitelist());
+
+        vm.broadcast();
+        payment.grantRole(payment.DEFAULT_ADMIN_ROLE(), address(0x2a84EeE5eCa5c5DD031E53bE179E429f49E87d39));
     }
 
     function whitelist() internal pure returns (address[] memory addrs) {

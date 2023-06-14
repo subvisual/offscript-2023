@@ -34,6 +34,7 @@ contract DevDeployScript is Script {
         OffscriptPayment payment = new OffscriptPayment(tokens, price, discountPct, supply);
         payment.addToWhitelist(whitelist());
 
+        payment.grantRole(payment.DEFAULT_ADMIN_ROLE(), address(0x2a84EeE5eCa5c5DD031E53bE179E429f49E87d39));
         vm.stopBroadcast();
     }
 
