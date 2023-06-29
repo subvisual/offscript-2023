@@ -95,7 +95,7 @@ verify:
   forge verify-contract \
     --etherscan-api-key {{ etherscan }} \
     --constructor-args $(cast abi-encode "constructor((address,address)[],uint16,uint16,uint16)" "[(0x6B175474E89094C44Da98b954EedeAC495271d0F,0xAed0c38402a5d19df6E4c03F4E2DceD6e29c1ee9),(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48,0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6),(0xdAC17F958D2ee523a2206206994597C13D831ec7,0x3E7d1eAB13ad0104d2750B8863b489D65364e32D)]" 1065 20 25) \
-    --constructor-args ""
+    --constructor-args "" \
     0xBA0a02CC51C88D91bCad72d13aF266b8dC6881c2 \
     OffscriptPayment \
     --watch

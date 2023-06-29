@@ -73,30 +73,30 @@ class SectionTicketView extends React.Component {
           }
         ` }} />
         <span className="af-view">
-          <div className="af-class-section af-class-is--80padding af-class-wf-section">
-            <div className="af-class-_1077_container">
-              <div className="af-class-overflow_hidden">
-                <div className="af-class-heading--137 af-class-_40margin-bottom-copy">CHECKOUT</div>
+          <div className="section is--80padding wf-section">
+            <div className="_1077_container">
+              <div className="overflow_hidden">
+                <div className="heading--137 _40margin-bottom-copy">CHECKOUT</div>
               </div>
               <div className="w-form">
-                <form id="email-form" name="email-form" data-name="Email Form" method="get" className="af-class-form-2" data-wf-page-id="6215154fc24aa1b66fc6f102" data-wf-element-id="d4c0632d-ec9b-03aa-3da0-cdb12516edff"><label htmlFor="Email-2" className="af-class-text--20">Email Address</label>{map(proxies['sock-email'], props => <input type="email" maxLength={256} name="Email" data-name="Email" placeholder="Your ticket is sent to this address" id="Email-2" required {...{...props, className: `af-class-text-field w-input ${props.className || ''}`}}>{props.children}</input>)}<label htmlFor="Email-3" className="af-class-text--20 af-class-_28 af-class-regular">Offscript experience</label>
-                  <div className="af-class-_28margin-left af-class-no-margin">
-                    <div className="af-class-text--20 af-class-margin-bottom-20">€990 / €790 for 2022 POAP holders{map(proxies['sock-price-1'], props => <span {...{...props, className: `af-class-price-regular ${props.className || ''}`}}>{props.children}</span>)}</div>
-                    <div className="af-class-text--20 af-class-margin-bottom-20">· Arrival Friday Oct 20<br />· Departure Sunday Oct 22</div>
-                    <div className="af-class-text--20 af-class-_16">Includes: <br />Event, 2 nights Accommodation, Meals &amp; drinks, Airport transfer, Activities, Local taxes</div>
-                    <div className="af-class-text--20 af-class-_12">**Shared rooms or suite. Private/family room upgrade available at cost, on request</div>
-                  </div><label htmlFor="field" className="af-class-text--20">Crypto Payment</label>{map(proxies['sock-currency'], props => <select id="field" name="field" data-name="Field" required {...{...props, className: `af-class-select-field w-select ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>
+                <form id="email-form" name="email-form" data-name="Email Form" method="get" className="form-2" data-wf-page-id="6215154fc24aa1b66fc6f102" data-wf-element-id="d4c0632d-ec9b-03aa-3da0-cdb12516edff"><label htmlFor="Email-2" className="text--20">Email Address</label>{map(proxies['sock-email'], props => <input type="email" maxLength={256} name="Email" data-name="Email" placeholder="Your ticket is sent to this address" id="Email-2" required {...{...props, className: `text-field w-input ${props.className || ''}`}}>{props.children}</input>)}<label htmlFor="Email-3" className="text--20 _28 regular">Offscript experience</label>
+                  <div className="_28margin-left no-margin">
+                    <div className="text--20 margin-bottom-20">€990 / €790 for 2022 POAP holders{map(proxies['sock-price-1'], props => <span {...{...props, className: `price-regular ${props.className || ''}`}}>{props.children}</span>)}</div>
+                    <div className="text--20 margin-bottom-20">· Arrival Friday Oct 20<br />· Departure Sunday Oct 22</div>
+                    <div className="text--20 _16">Includes: <br />Event, 2 nights Accommodation, Meals &amp; drinks, Airport transfer, Activities, Local taxes</div>
+                    <div className="text--20 _12">**Shared rooms or suite. Private/family room upgrade available at cost, on request</div>
+                  </div><label htmlFor="field" className="text--20">Crypto Payment</label>{map(proxies['sock-currency'], props => <select id="field" name="field" data-name="Field" required {...{...props, className: `select-field w-select ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>
                     <option value>Select a currency</option>
                     <option value="USDC">USDC</option>
                     <option value="DAI">DAI</option>
-                  </React.Fragment>}</select>)}{map(proxies['sock-buy-ticket'], props => <input type="submit" value="BUY TICKET" data-wait="Please wait..." {...{...props, className: `af-class-submit-button w-button ${props.className || ''}`}}>{props.children}</input>)}
-                  {map(proxies['sock-ticket-notice'], props => <div {...{...props, className: `af-class-text--20 af-class-_16margin-top ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Waiting placeholder...</React.Fragment>}</div>)}
+                  </React.Fragment>}</select>)}{map(proxies['sock-buy-ticket'], props => <input type="submit" value="BUY TICKET" data-wait="Please wait..." {...{...props, className: `submit-button w-button ${props.className || ''}`}}>{props.children}</input>)}
+                  {map(proxies['sock-ticket-notice'], props => <div {...{...props, className: `text--20 _16margin-top ${props.className || ''}`}}>{props.children ? props.children : <React.Fragment>Waiting placeholder...</React.Fragment>}</div>)}
                 </form>
-                <div className="af-class-success-message w-form-done">
-                  <div className="af-class-text--20">Thank you! Your submission has been received!</div>
+                <div className="success-message w-form-done">
+                  <div className="text--20">Thank you! Your submission has been received!</div>
                 </div>
-                <div className="af-class-error-message w-form-fail">
-                  <div className="af-class-text--20">Oops! Something went wrong while submitting the form.</div>
+                <div className="error-message w-form-fail">
+                  <div className="text--20">Oops! Something went wrong while submitting the form.</div>
                 </div>
               </div>
             </div>
