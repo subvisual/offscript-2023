@@ -191,7 +191,7 @@ export function TicketProvider({ children }: Props) {
       try {
         await approvalTx.wait();
         setApprovalMined(true);
-      } finally {
+      } catch(err) {
         setApprovalMined(false);
       }
     })();

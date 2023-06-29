@@ -49,8 +49,7 @@ eth:
   just build-contracts
   just test
   sleep 2 && just eth-deploy &
-  anvil --host 0.0.0.0 --silent
-
+  anvil --host 0.0.0.0
 build-contracts:
   forge build
 
