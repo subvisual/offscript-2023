@@ -18,8 +18,8 @@ const validateEmail = (email?: string) =>
 const validateCurrency = (currency?: string) =>
   currency && ["USDC", "USDT", "DAI", "ETH"].indexOf(currency) != -1;
 
-const Price = 1065;
-const DiscountedPrice = 850;
+const Price = 1090;
+const DiscountedPrice = 870;
 
 const SectionTicketController: FC = () => {
   const { account } = useWeb3React<Web3Provider>();
