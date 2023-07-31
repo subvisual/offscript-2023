@@ -27,7 +27,7 @@ contract DevDeployScript is Script {
             oracle: address(0x3E7d1eAB13ad0104d2750B8863b489D65364e32D)
         });
 
-        uint16 price = 1065;
+        uint16 price = 1090;
         uint16 discountPct = 20;
         uint16 supply = 25;
 

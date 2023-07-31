@@ -87,8 +87,9 @@ mainnet-script script:
     --fork-url {{ mainnet }} \
     --private-key "{{ mainnet_pk }}" \
     --sender "{{ mainnet_sender }}" \
-    --with-gas-price "35000000000" \
-    --broadcast
+    --verify \
+    --broadcast \
+    --resume
 
 verify:
   forge verify-contract \
